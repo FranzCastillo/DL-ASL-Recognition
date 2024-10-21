@@ -3,6 +3,7 @@ import os
 import cv2
 
 from utils.webcam import Webcam
+from utils.hand_processor import HandProcessor
 
 DATA_DIR = 'data'
 PICTURES_PER_CLASS = 50
@@ -32,6 +33,7 @@ def _create_folders():
 
 def main():
     cam = Webcam()
+    landmarker = HandProcessor()
 
     _create_folders()
 
@@ -39,6 +41,8 @@ def main():
     print(f'Number of classes: {len(classes)}')
 
     for i, class_name in enumerate(classes):
+        skip = False
+
         while True:  # When the user is ready, press SPACE to start
             image = cam.read_frame()
             if image is None:
@@ -54,6 +58,12 @@ def main():
                 (0, 255, 0),
                 2
             )
+
+            # Draw Landmarks
+            landmarks = landmarker.process_frame(image)
+            if landmarks is not None:
+                landmarker.draw_landmarks(image, landmarks)
+
             cv2.imshow(WIN_NAME, image)
 
             key = cv2.waitKey(25) & 0xFF
@@ -62,9 +72,15 @@ def main():
             elif key == ord('q'):  # If the 'Q' key is pressed.
                 cam.release()
                 return
+            elif key == ord('s'):
+                skip = True
+                break
 
         # Start taking pictures.
         for j in range(PICTURES_PER_CLASS):
+            if skip:
+                break
+
             image = cam.read_frame()
             if image is None:
                 break
