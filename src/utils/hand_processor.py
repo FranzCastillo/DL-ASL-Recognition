@@ -3,8 +3,12 @@ import mediapipe as mp
 
 
 class HandProcessor:
-    def __init__(self):
-        self.hands = mp.solutions.hands.Hands()
+    def __init__(self, static_image_mode=False, min_detection_confidence=0.5, min_tracking_confidence=0.5):
+        self.hands = mp.solutions.hands.Hands(
+            static_image_mode=static_image_mode,
+            min_detection_confidence=min_detection_confidence,
+            min_tracking_confidence=min_tracking_confidence
+        )
         self.drawing_utils = mp.solutions.drawing_utils
 
     def process_frame(self, image):

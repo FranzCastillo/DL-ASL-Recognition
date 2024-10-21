@@ -9,7 +9,7 @@ class Webcam:
         success, image = self.cap.read()
         if not success:
             return None
-        image = cv2.flip(image, 1)
+        image = cv2.flip(image, 1)  # Mirror the image.
         return image
 
     def release(self):
