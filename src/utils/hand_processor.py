@@ -16,6 +16,10 @@ class HandProcessor:
         results = self.hands.process(image_rgb)
         return results
 
+    def process_image(self, image_path):
+        image = cv2.imread(image_path)
+        return self.process_frame(image)
+
     def draw_landmarks(self, image, results):
         if results.multi_hand_landmarks:
             for hand_landmarks in results.multi_hand_landmarks:

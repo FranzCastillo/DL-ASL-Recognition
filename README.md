@@ -17,3 +17,12 @@ Make sure you:
 ```bash
 pip install -r requirements.txt
 ```
+### Workflow
+1. Since the images dataset is too large, you need to start by capturing your own images. Run the following command to start capturing images.
+```bash
+python src/collect_data.py
+```
+2. After capturing the images, you can generate a CSV file with the landmark and class information. Run the following command to generate the CSV file.
+```bash
+python src/create_csv.py
+```
