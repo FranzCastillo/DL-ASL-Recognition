@@ -28,7 +28,7 @@ def main():
                 for hand_landmarks in results.multi_hand_landmarks:
                     landmarks = []
                     for landmark in hand_landmarks.landmark:
-                        landmarks.extend([landmark.x, landmark.y, landmark.z])
+                        landmarks.extend([landmark.x, landmark.y])
                     landmarks.append(class_name)
                     data.append(landmarks)
 
