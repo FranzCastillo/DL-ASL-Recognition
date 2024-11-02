@@ -10,7 +10,7 @@ WIN_NAME = 'ASL Recognition'
 def main():
     hand_processor = HandProcessor()
     webcam = Webcam()
-    classifier = Classifier('model/asl_classifier_model.keras')
+    classifier = Classifier('./src/model/asl_classifier_model.keras')
 
     while True:
         image = webcam.read_frame()
@@ -20,7 +20,11 @@ def main():
         results = hand_processor.process_frame(image)
         # image = hand_processor.draw_landmarks(image, results)
 
-        prediction = classifier.predict(results)
+        prediction = None
+        try: 
+            prediction = classifier.predict(results)
+        except:
+            pass
 
         if prediction is not None:
             cv2.putText(
