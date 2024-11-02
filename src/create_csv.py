@@ -4,7 +4,7 @@ import os
 from utils.hand_processor import HandProcessor
 
 DATA_DIR = 'data'
-CSV_FILE = 'model/landmarks.csv'
+CSV_FILE = './src/model/landmarks.csv'
 
 
 def main():
