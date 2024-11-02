@@ -8,6 +8,7 @@ WIN_NAME = 'ASL Recognition'
 
 
 def main():
+    phrase = ''
     hand_processor = HandProcessor()
     webcam = Webcam()
     classifier = Classifier('./src/model/asl_classifier_model.keras')
@@ -26,6 +27,17 @@ def main():
         except:
             pass
 
+        if phrase != '':
+                cv2.putText(
+                    image,
+                    f'Phrase: {phrase}',
+                    (10, 60),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    1,
+                    (0, 255, 0),
+                    2
+                )
+
         if prediction is not None:
             cv2.putText(
                 image,
@@ -36,6 +48,20 @@ def main():
                 (0, 255, 0),
                 2
             )
+            # on space key press, save the character
+            key = cv2.waitKey(1) & 0xFF
+
+            if key == ord(' '):
+                char = chr(prediction + 65)
+
+                if char == '[':
+                    phrase = phrase[:-1]
+                else:
+                    if char == '\\':
+                        char = ' '
+                    
+                    phrase += char
+                    
 
         cv2.imshow(WIN_NAME, image)
 
