@@ -2,6 +2,7 @@ import cv2
 
 from utils.hand_processor import HandProcessor
 from utils.webcam import Webcam
+from utils.classifier import Classifier
 
 WIN_NAME = 'ASL Recognition'
 
@@ -9,6 +10,7 @@ WIN_NAME = 'ASL Recognition'
 def main():
     hand_processor = HandProcessor()
     webcam = Webcam()
+    classifier = Classifier('model/asl_classifier_model.keras')
 
     while True:
         image = webcam.read_frame()
@@ -16,7 +18,20 @@ def main():
             break
 
         results = hand_processor.process_frame(image)
-        image = hand_processor.draw_landmarks(image, results)
+        # image = hand_processor.draw_landmarks(image, results)
+
+        prediction = classifier.predict(results)
+
+        if prediction is not None:
+            cv2.putText(
+                image,
+                f'Prediction: {chr(prediction + 65)}',
+                (10, 30),
+                cv2.FONT_HERSHEY_SIMPLEX,
+                1,
+                (0, 255, 0),
+                2
+            )
 
         cv2.imshow(WIN_NAME, image)
 
