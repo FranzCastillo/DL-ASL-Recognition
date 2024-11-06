@@ -11,7 +11,7 @@ def main():
     phrase = ''
     hand_processor = HandProcessor()
     webcam = Webcam()
-    classifier = Classifier('./src/model/asl_classifier_model.keras')
+    classifier = Classifier('model/asl_classifier_model.keras')
 
     while True:
         image = webcam.read_frame()
