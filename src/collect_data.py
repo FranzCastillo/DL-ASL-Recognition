@@ -6,7 +6,7 @@ from utils.webcam import Webcam
 from utils.hand_processor import HandProcessor
 
 DATA_DIR = 'data'
-PICTURES_PER_CLASS = 100
+PICTURES_PER_CLASS = 75
 WIN_NAME = 'Collecting ASL Data'
 
 
@@ -43,59 +43,69 @@ def main():
     for i, class_name in enumerate(classes):
         skip = False
 
-        while True:  # When the user is ready, press SPACE to start
-            image = cam.read_frame()
-            if image is None:
-                break
+        for hand in ['LEFT', 'RIGHT']:
+            while True:  # When the user is ready, press SPACE to start
+                image = cam.read_frame()
+                if image is None:
+                    break
 
-            # Add text
-            cv2.putText(
-                image,
-                f'Press SPACE to start capturing {class_name}',
-                (10, 30),
-                cv2.FONT_HERSHEY_SIMPLEX,
-                1,
-                (0, 255, 0),
-                2
-            )
+                # Add text
+                cv2.putText(
+                    image,
+                    f'Press SPACE to start capturing {class_name}.',
+                    (10, 30),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    1,
+                    (0, 255, 0),
+                    2
+                )
+                cv2.putText(
+                    image,
+                    f'Hand: {hand}',
+                    (10, 60),
+                    cv2.FONT_HERSHEY_SIMPLEX,
+                    1,
+                    (0, 255, 0),
+                    2
+                )
 
-            # Draw Landmarks
-            landmarks = landmarker.process_frame(image)
-            if landmarks is not None:
-                landmarker.draw_landmarks(image, landmarks)
+                # Draw Landmarks
+                landmarks = landmarker.process_frame(image)
+                if landmarks is not None:
+                    landmarker.draw_landmarks(image, landmarks)
 
-            cv2.imshow(WIN_NAME, image)
+                cv2.imshow(WIN_NAME, image)
 
-            key = cv2.waitKey(25) & 0xFF
-            if key == ord(' '):  # If the 'SPACE' key is pressed.
-                break
-            elif key == ord('q'):  # If the 'Q' key is pressed.
-                cam.release()
-                return
-            elif key == ord('s'):
-                skip = True
-                break
+                key = cv2.waitKey(25) & 0xFF
+                if key == ord(' '):  # If the 'SPACE' key is pressed.
+                    break
+                elif key == ord('q'):  # If the 'Q' key is pressed.
+                    cam.release()
+                    return
+                elif key == ord('s'):  # If the 'S' key is pressed.
+                    skip = True
+                    break
 
-        # Start taking pictures.
-        for j in range(PICTURES_PER_CLASS):
-            if skip:
-                break
+            # Start taking pictures.
+            for j in range(PICTURES_PER_CLASS):
+                if skip:
+                    break
 
-            image = cam.read_frame()
-            if image is None:
-                break
+                image = cam.read_frame()
+                if image is None:
+                    break
 
-            # Display the image.
-            cv2.imshow(WIN_NAME, image)
+                # Display the image.
+                cv2.imshow(WIN_NAME, image)
 
-            # Save the image to the corresponding class folder.
-            cv2.imwrite(f'{DATA_DIR}/{class_name}/{j}.jpg', image)
+                # Save the image to the corresponding class folder.
+                cv2.imwrite(f'{DATA_DIR}/{class_name}/{j}_{hand}.jpg', image)
 
-            # Wait 25ms for the next picture to be taken.
-            key = cv2.waitKey(25) & 0xFF
-            if key == ord('q'):  # If the 'Q' key is pressed.
-                cam.release()
-                return
+                # Wait 25ms for the next picture to be taken.
+                key = cv2.waitKey(25) & 0xFF
+                if key == ord('q'):  # If the 'Q' key is pressed.
+                    cam.release()
+                    return
 
     cam.release()
 
