@@ -6,7 +6,7 @@ from utils.webcam import Webcam
 from utils.hand_processor import HandProcessor
 
 DATA_DIR = 'data'
-PICTURES_PER_CLASS = 75
+PICTURES_PER_CLASS = 100
 WIN_NAME = 'Collecting ASL Data'
 
 
