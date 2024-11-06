@@ -1,13 +1,16 @@
+import argparse
 import csv
 import os
 
 from utils.hand_processor import HandProcessor
 
 DATA_DIR = 'data'
-CSV_FILE = './src/model/landmarks.csv'
+CSV_PATH = 'model/data'
 
 
-def main():
+def main(filename):
+    output_path = os.path.join(CSV_PATH, filename)
+
     landmarker = HandProcessor(
         static_image_mode=True,
         min_detection_confidence=0.4
@@ -20,6 +23,11 @@ def main():
         print(f'Processing class: {class_name}')
         class_dir = f'{DATA_DIR}/{class_name}'
         images = os.listdir(class_dir)
+
+        if len(images) == 0:
+            print(f'No images found')
+            continue
+
         for image in images:
             image_path = f'{class_dir}/{image}'
             results = landmarker.process_image(image_path)
@@ -33,7 +41,7 @@ def main():
                     data.append(landmarks)
 
     # Write the data to a CSV file
-    with open(CSV_FILE, mode='w', newline='') as file:
+    with open(output_path, mode='w', newline='') as file:
         writer = csv.writer(file)
         header = [f'landmark_{i}' for i in range(len(data[0]) - 1)] + ['class']
         writer.writerow(header)
@@ -41,4 +49,9 @@ def main():
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser(description='Filename to save the CSV file')
+    parser.add_argument('filename', type=str, help='The name of the CSV file to save the landmarks to')
+
+    args = parser.parse_args()
+
+    main(f'{args.filename}.csv')
